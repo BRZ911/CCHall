@@ -1,1 +1,155 @@
-# CCHall
+---
+license: unknown
+task_categories:
+- question-answering
+- image-to-text
+language:
+- en
+- hr
+- cy
+- sw
+- cs
+- nl
+- sv
+- fr
+- es
+- pt
+size_categories:
+- 1K<n<10K
+---
+# CCHall Dataset
+
+This is the CCHall dataset for evaluating cross-modal and cross-lingual hallucinations
+in Vision-Language Models.
+
+## Dataset Structure
+
+The dataset contains a single split:
+- `test`: Contains 3600 examples.
+
+Each example has the following fields:
+- `question_id`: (integer) Unique identifier for the question.
+- `dataset_source`: (string) Origin dataset (e.g., "AMBER", "GQA").
+- `image_id`: (string) Identifier for the image.
+- `question`: (string) The question asked about the image.
+- `response1`: (string) First response to the question.
+- `response2`: (string) Second response (often in a different language).
+- `choice`: (string) Choices for hallucination type.
+- `label`: (string) Label for hallucination type.
+- `language`: (string) Language code (e.g., "sw", "en").
+- `language_category`: (string) Category like "low resource".
+- `image_binary`: (binary) The binary content of the image.
+
+
+## 🎯 Installation
+
+### 1. Dataset Preparation
+#### Load Dataset from Huggingface
+```python 
+import datasets
+dataset = load_dataset("67L11/CCHall", split="test")
+```
+
+#### Load Dataset from Google Drive 
+Please download the corresponding data set from [Here](https://drive.google.com/file/d/1ldAan9KRA9zojKc3eQDrKwhIFQ-hVSMJ/view?usp=drive_link) and place the unzipped content in the `data` folder.
+
+```python 
+import datasets
+dataset = load_dataset('parquet', data_files='data/test.parquet')
+```
+
+### 2. Evaluation for reproduction on GPT-4o
+```python 
+import base64
+import os
+import time
+from openai import OpenAI
+from datasets import load_dataset
+import io
+
+# --- Configuration ---
+API_KEY = "YOUR_OPENAI_API_KEY"  # Replace with your actual OpenAI API key
+# Or use environment variable: os.getenv("OPENAI_API_KEY")
+API_BASE = "https://api.openai.com/v1"
+GPT_MODEL = "gpt-4o"
+DATASET_REPO_ID = "67L11/CCHall"
+
+client = OpenAI(api_key=API_KEY, base_url=API_BASE)
+
+def get_prompt(question, answer1, answer2, choice):
+    prompt = f"""You are a hallucination detection system tasked with categorizing hallucinations based on images , questions and answers in two different languages. Your job is to analyze the provided image, question, and both language answers to determine the type of hallucination, if any.
+
+Explanation of Hallucination Types
+Non-hallucination: Both the English and the other language answers are consistent with the content of the image, and they correctly describe what is present in the image.
+Cross-modal, non-cross-lingual hallucination: Both the English and the other language answers are inconsistent with the image content, specifically regarding the existence of objects. The key point is that the both languages make the same error, mentioning the existence of the same object(s) that do not appear in the image.
+Cross-lingual, non-cross-modal hallucination: The English answer is consistent with the image, but the answer in the other language contains an error regarding the existence of objects.
+Cross-modal, cross-lingual hallucination: Both the English and the other language answers are inconsistent with the image, and they differ in the objects they describe as being present. In other words, both languages make errors, but they reference different nonexistent objects.
+
+Task
+Based on the following information, identify the type of hallucination:
+Image: [The provided image]
+Question: {question}
+Answer1: {answer1}
+Answer2: {answer2}
+Options: {choice}
+
+Output Format
+**At the end of the analysis, provide a final, concise, and definitive answer in the following format:**
+**Final Answer: [Option]. [Option Content].**"""
+    return prompt
+
+
+def encode_image_bytes(image_bytes):
+    """Encodes image bytes to a base64 string."""
+    if image_bytes is None:
+        return None
+    return base64.b64encode(image_bytes).decode('utf-8')
+
+
+def get_gpt4o_response(prompt_text, base64_image_data):
+    """Sends the prompt and image to GPT-4o and returns the response content."""
+    response = client.chat.completions.create(
+        model=GPT_MODEL,
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt_text},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{base64_image_data}",
+                        },
+                    },
+                ],
+            }
+        ],
+        max_tokens=256,
+    )
+    return response.choices[0].message.content
+
+
+def process_dataset_with_gpt4o():
+    dataset = load_dataset(DATASET_REPO_ID, split="test")
+
+    for item in dataset:
+        image_id = item['image_id']
+        question = item['question']
+        answer1 = item['response1']
+        answer2 = item['response2']
+        choice = item['choice']  
+        true_label = item['label']  
+        image_bytes = item['image_binary'] 
+
+        # 1. Encode the image bytes to base64
+        base64_image = encode_image_bytes(image_bytes)
+
+        # 2. Get the prompt
+        prompt_text = get_prompt(question, answer1, answer2, choice)
+
+        # 3. Get response from GPT-4o
+        gpt4o_full_response = get_gpt4o_response(prompt_text, base64_image)
+
+if __name__ == "__main__":
+    process_dataset_with_gpt4o()
+```
