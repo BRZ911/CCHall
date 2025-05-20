@@ -10,9 +10,12 @@
 ## Dataset Structure
 
 The dataset contains a single split:
+```yaml
 - `test`: Contains 3600 examples.
+```
 
 Each example has the following fields:
+```yaml
 - `question_id`: (integer) Unique identifier for the question.
 - `dataset_source`: (string) Origin dataset (e.g., "AMBER", "GQA").
 - `image_id`: (string) Identifier for the image.
@@ -24,7 +27,7 @@ Each example has the following fields:
 - `language`: (string) Language code (e.g., "sw", "en").
 - `language_category`: (string) Category like "low resource".
 - `image`: (binary) The binary content of the image.
-
+```
 
 ## 🎯 Installation
 
@@ -164,3 +167,8 @@ def process_dataset_with_gpt4o():
 if __name__ == "__main__":
     process_dataset_with_gpt4o()
 ```
+
+
+## 💬 Contact
+
+If you have any questions or suggestions, please create a GitHub issue or email [Yongheng Zhang](mailto:zyhbrz@gmail.com).
