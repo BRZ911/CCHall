@@ -1,7 +1,11 @@
-# CCHall Dataset
+# CCHall: A Novel Benchmark for Joint Cross-Lingual and Cross-Modal Hallucinations Detection in Large Language Models
 
-This is the CCHall dataset for evaluating cross-modal and cross-lingual hallucinations
-in Vision-Language Models.
+📷 This is the code repository for the paper: CCHall: A Novel Benchmark for Joint Cross-Lingual and Cross-Modal Hallucinations Detection in Large Language Models. **ACL 2025 Main**.
+
+<div>
+<img src="./image/image_div.png" width="100%">
+</div>
+👀 Presentation of data in CCHall.
 
 ## Dataset Structure
 
@@ -32,7 +36,7 @@ dataset = load_dataset("67L11/CCHall", split="test")
 ```
 
 #### Load Dataset from Google Drive 
-Please download the corresponding dataset from [Here](https://drive.google.com/drive/folders/110bWAuA7sHHWfbtJPcjRgnzl1NuOcj-I?usp=drive_link) and place the unzipped content in the `data` folder.
+Please download the corresponding dataset from [🤗HuggingFace](https://drive.google.com/drive/folders/110bWAuA7sHHWfbtJPcjRgnzl1NuOcj-I?usp=drive_link)/[☁️Google Drive](https://drive.google.com/drive/folders/110bWAuA7sHHWfbtJPcjRgnzl1NuOcj-I?usp=drive_link) and place the unzipped content in the `data` folder.
 
 📁 This download includes:
 
