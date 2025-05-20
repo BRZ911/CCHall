@@ -24,7 +24,7 @@ Each example has the following fields:
 
 ## 🎯 Installation
 
-### 1. Dataset Preparation
+### 📦 1. Dataset Preparation
 #### Load Dataset from Huggingface
 ```python 
 import datasets
@@ -32,7 +32,33 @@ dataset = load_dataset("67L11/CCHall", split="test")
 ```
 
 #### Load Dataset from Google Drive 
-Please download the corresponding data set from [Here](https://drive.google.com/file/d/1ldAan9KRA9zojKc3eQDrKwhIFQ-hVSMJ/view?usp=drive_link) and place the unzipped content in the `data` folder.
+Please download the corresponding dataset from [Here](https://drive.google.com/drive/folders/110bWAuA7sHHWfbtJPcjRgnzl1NuOcj-I?usp=drive_link) and place the unzipped content in the `data` folder.
+
+📁 This download includes:
+
+- ✅ `test.parquet`:  
+  A processed Parquet file containing all merged data entries and metadata from multiple datasets.
+
+- ✅ Original image archives (compressed folders) for the following 4 data sources:
+  - `AMBER`
+  - `GQA`
+  - `xFlickrCO`
+  - `XM3600`
+
+#### 📂 Expected directory structure after unzipping:
+```yaml
+project-root/
+├── data/
+│ ├── amber_image/
+│ ├── gqa_image/
+│ ├── xflickr_image/
+│ ├── xm3600_image/
+│ └── test.parquet
+├── your_code.py
+└── README.md
+```
+Once the files are in place, you can run the data processing script or load `test.parquet` directly for analysis or modeling.
+
 
 ```python 
 import datasets
