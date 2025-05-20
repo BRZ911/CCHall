@@ -1,22 +1,3 @@
----
-license: unknown
-task_categories:
-- question-answering
-- image-to-text
-language:
-- en
-- hr
-- cy
-- sw
-- cs
-- nl
-- sv
-- fr
-- es
-- pt
-size_categories:
-- 1K<n<10K
----
 # CCHall Dataset
 
 This is the CCHall dataset for evaluating cross-modal and cross-lingual hallucinations
@@ -38,7 +19,7 @@ Each example has the following fields:
 - `label`: (string) Label for hallucination type.
 - `language`: (string) Language code (e.g., "sw", "en").
 - `language_category`: (string) Category like "low resource".
-- `image_binary`: (binary) The binary content of the image.
+- `image`: (binary) The binary content of the image.
 
 
 ## 🎯 Installation
@@ -139,7 +120,7 @@ def process_dataset_with_gpt4o():
         answer2 = item['response2']
         choice = item['choice']  
         true_label = item['label']  
-        image_bytes = item['image_binary'] 
+        image_bytes = item['image']['bytes'] 
 
         # 1. Encode the image bytes to base64
         base64_image = encode_image_bytes(image_bytes)
