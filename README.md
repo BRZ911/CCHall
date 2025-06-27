@@ -39,7 +39,7 @@ dataset = load_dataset("67L11/CCHall", split="test")
 ```
 
 #### Load Dataset from Google Drive 
-Please download the corresponding dataset from [🤗HuggingFace](https://drive.google.com/drive/folders/110bWAuA7sHHWfbtJPcjRgnzl1NuOcj-I?usp=drive_link)/[☁️Google Drive](https://drive.google.com/drive/folders/110bWAuA7sHHWfbtJPcjRgnzl1NuOcj-I?usp=drive_link) and place the unzipped content in the `data` folder.
+Please download the corresponding dataset from [🤗HuggingFace](https://huggingface.co/datasets/67L11/CCHall)/[☁️Google Drive](https://drive.google.com/drive/folders/110bWAuA7sHHWfbtJPcjRgnzl1NuOcj-I?usp=drive_link) and place the unzipped content in the `data` folder.
 
 📁 This download includes:
 
